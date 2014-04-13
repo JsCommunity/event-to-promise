@@ -24,7 +24,7 @@ var eventToPromise = require('event-to-promise');
 
 var createServer = function (port) {
   var server = require('http').createServer();
-  server.listen(0);
+  server.listen(port);
 
   // The server will be returned once it has started listening.
   //
