@@ -31,10 +31,6 @@ describe('event-to-promise', function () {
   it('waits for an event', function () {
     var emitted = false;
 
-    emitter.on('foo', function () {
-      emitted = true;
-    });
-
     var promise = eventToPromise(emitter, 'foo');
 
     // Delay the event emission of two ticks to make sure the promise
@@ -42,6 +38,7 @@ describe('event-to-promise', function () {
     process.nextTick(function () {
       process.nextTick(function () {
         emitter.emit('foo');
+        emitted = true;
       });
     });
 
