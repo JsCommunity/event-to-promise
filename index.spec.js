@@ -14,8 +14,10 @@ var EventEmitter = require('events').EventEmitter;
 
 //====================================================================
 
-// TODO: forcing the parameters to be forwarded in an array for
-// consistency and predictability.
+// TODO:
+// - Forcing the parameters to be forwarded in an array for
+//   consistency and predictability.
+// - Maybe handling multiple events.
 
 describe('event-to-promise', function () {
   var emitter;
