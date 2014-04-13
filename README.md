@@ -52,6 +52,17 @@ require('bluebird').coroutine(function *() {
 })();
 ```
 
+## Contributing
+
+Contributions are *very* welcome, either on the documentation or on
+the code.
+
+You may:
+
+- report any [issue](https://github.com/julien-f/human-format/issues)
+  you've encountered;
+- fork and create a pull request.
+
 ## License
 
 ISC © [Julien Fontanet](http://julien.isonoe.net)
