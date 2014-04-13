@@ -62,7 +62,7 @@ describe('event-to-promise', function () {
 
   //------------------------------------------------------------------
 
-  it('fowards multiple event parameter in an array', function () {
+  it('fowards multiple event parameters in an array', function () {
     var parameters = [{}, {}];
 
     var promise = eventToPromise(emitter, 'foo');
@@ -93,7 +93,7 @@ describe('event-to-promise', function () {
 
   //------------------------------------------------------------------
 
-  it('removes listener after event', function () {
+  it('removes listeners after event', function () {
     var promise = eventToPromise(emitter, 'foo');
     emitter.emit('foo');
 
@@ -105,7 +105,7 @@ describe('event-to-promise', function () {
 
   //------------------------------------------------------------------
 
-  it('removes listener after error', function () {
+  it('removes listeners after error', function () {
     var promise = eventToPromise(emitter, 'foo');
     emitter.emit('error');
 
