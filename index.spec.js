@@ -63,13 +63,16 @@ describe('event-to-promise', function () {
   //------------------------------------------------------------------
 
   it('fowards multiple event parameters in an array', function () {
-    var parameters = [{}, {}];
+    var param0 = {};
+    var param1 = {};
 
     var promise = eventToPromise(emitter, 'foo');
-    emitter.emit.apply(emitter, ['foo'].concat(parameters));
+    emitter.emit('foo', param0, param1);
 
     return promise.then(function (values) {
-      expect(values).to.deep.equal(parameters);
+      expect(values).to.have.length(2);
+      expect(values[0]).to.equal(param0);
+      expect(values[1]).to.equal(param1);
     });
   });
 
