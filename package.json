@@ -1,6 +1,6 @@
 {
   "name": "event-to-promise",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "Create a promise waiting for an event",
   "keywords": [
