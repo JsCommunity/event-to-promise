@@ -36,5 +36,5 @@ module.exports = function (emitter, event) {
   emitter.once(event, eventListener);
   emitter.once('error', errorListener);
 
-  return deferred.promise;
+  return deferred.promise.bind(emitter);
 };
