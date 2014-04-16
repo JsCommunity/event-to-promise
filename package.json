@@ -4,8 +4,8 @@
   "license": "MIT",
   "description": "Create a promise waiting for an event",
   "keywords": [
-    "password",
-    "hash"
+    "event",
+    "promise"
   ],
   "homepage": "https://github.com/julien-f/event-to-promise",
   "bugs": "https://github.com/julien-f/event-to-promise/issues",
