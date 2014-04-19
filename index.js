@@ -12,29 +12,27 @@ toArray = toArray.call.bind(toArray);
 //====================================================================
 
 module.exports = function (emitter, event) {
-  var deferred = Promise.defer();
+  return new Promise(function (resolve, reject) {
+    var eventListener, errorListener;
+    eventListener = function () {
+      emitter.removeListener('error', errorListener);
 
-  var eventListener, errorListener;
-  eventListener = function () {
-    emitter.removeListener('error', errorListener);
+      if (arguments.length < 2)
+      {
+        resolve(arguments[0]);
+      }
+      else
+      {
+        resolve(toArray(arguments));
+      }
+    };
+    errorListener = function (error) {
+      emitter.removeListener(event, eventListener);
 
-    if (arguments.length < 2)
-    {
-      deferred.resolve(arguments[0]);
-    }
-    else
-    {
-      deferred.resolve(toArray(arguments));
-    }
-  };
-  errorListener = function (error) {
-    emitter.removeListener(event, eventListener);
+      reject(error);
+    };
 
-    deferred.reject(error);
-  };
-
-  emitter.once(event, eventListener);
-  emitter.once('error', errorListener);
-
-  return deferred.promise.bind(emitter);
+    emitter.once(event, eventListener);
+    emitter.once('error', errorListener);
+  }).bind(emitter);
 };
