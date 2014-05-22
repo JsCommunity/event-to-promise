@@ -27,5 +27,8 @@
   },
   "scripts": {
     "test": "mocha index.spec.js"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
