@@ -2,7 +2,7 @@
 
 //====================================================================
 
-var Promise = require('bluebird');
+var Bluebird = require('bluebird');
 
 //====================================================================
 
@@ -21,7 +21,7 @@ toArray = toArray.call.bind(toArray);
 //====================================================================
 
 module.exports = function (emitter, event) {
-  return new Promise(function (resolve, reject) {
+  return new Bluebird(function (resolve, reject) {
     // Some emitter do not implement removeListener.
     var removeListener = emitter.removeListener ?
       bind(emitter.removeListener, emitter) :
