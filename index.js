@@ -15,8 +15,9 @@ var bind = function (fn, ctx) {
 
 var noop = function () {};
 
-var toArray = Array.prototype.slice;
-toArray = toArray.call.bind(toArray);
+var toArray = Array.from || (function (slice) {
+  return bind(slice.call, slice);
+})(Array.prototype.slice);
 
 //====================================================================
 
