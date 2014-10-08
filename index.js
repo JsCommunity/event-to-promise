@@ -7,13 +7,13 @@ var Bluebird = require('bluebird');
 //====================================================================
 
 // Faster `Function.bind()`.
-var bind = function (fn, ctx) {
-  return function () {
+function bind(fn, ctx) {
+  return function bindedFunction() {
     return fn.apply(ctx, arguments);
   };
-};
+}
 
-var noop = function () {};
+function noop() {}
 
 var toArray = Array.from || (function (slice) {
   return bind(slice.call, slice);
@@ -21,7 +21,7 @@ var toArray = Array.from || (function (slice) {
 
 //====================================================================
 
-module.exports = function (emitter, event) {
+function eventToPromise(emitter, event) {
   return new Bluebird(function (resolve, reject) {
     // Some emitter do not implement removeListener.
     var removeListener = emitter.removeListener ?
@@ -29,9 +29,7 @@ module.exports = function (emitter, event) {
       noop
     ;
 
-
-    var eventListener, errorListener;
-    eventListener = function () {
+    function eventListener() {
       removeListener(event, eventListener);
       removeListener('error', errorListener);
 
@@ -43,15 +41,16 @@ module.exports = function (emitter, event) {
       {
         resolve(toArray(arguments));
       }
-    };
-    errorListener = function (error) {
+    }
+    function errorListener(error) {
       removeListener(event, eventListener);
       removeListener('error', errorListener);
 
       reject(error);
-    };
+    }
 
     emitter.on(event, eventListener);
     emitter.on('error', errorListener);
   }).bind(emitter);
-};
+}
+exports = module.exports = eventToPromise;
