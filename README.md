@@ -22,7 +22,7 @@ npm install --save event-to-promise
 ```javascript
 var eventToPromise = require('event-to-promise');
 
-var createServer = function (port) {
+function createServer(port) {
   var server = require('http').createServer();
   server.listen(port);
 
