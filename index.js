@@ -21,11 +21,22 @@ var toArray = Array.from || (function (slice) {
 
 // ===================================================================
 
-function eventToPromise (emitter, event) {
+function eventToPromise (emitter, event, opts) {
   return new Bluebird(function (resolve, reject) {
-    // Some emitter do not implement removeListener.
-    var removeListener = emitter.removeListener ?
-      bind(emitter.removeListener, emitter) :
+    var addListener =
+      emitter.addEventListener ||
+      emitter.addListener ||
+      emitter.on
+    if (!addListener) {
+      throw new Error('cannot register an event listener')
+    }
+    addListener = bind(addListener, emitter)
+
+    var removeListener =
+      emitter.removeEventListener ||
+      emitter.removeListener
+    removeListener = removeListener ?
+      bind(removeListener, emitter) :
       noop
 
     function eventListener () {
