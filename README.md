@@ -52,6 +52,33 @@ require('bluebird').coroutine(function *() {
 })();
 ```
 
+## API
+
+### eventToPromise(emitter, eventName, [options])
+
+#### emitter
+
+*Required*
+Type: `object`
+
+The event emitter you want to watch an event on.
+
+#### eventName
+
+*Required*
+Type: `string`
+
+The name of the event you want to watch.
+
+#### options
+
+##### ignoreErrors
+
+Type: `boolean`
+Default: `false`
+
+Whether the error event should be ignored and not reject the promise.
+
 ## Contributing
 
 Contributions are *very* welcome, either on the documentation or on
