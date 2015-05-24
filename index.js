@@ -22,6 +22,8 @@ var toArray = Array.from || (function (slice) {
 // ===================================================================
 
 function eventToPromise (emitter, event, opts) {
+  var ignoreErrors = opts && opts.ignoreErrors
+
   return new Bluebird(function (resolve, reject) {
     var addListener =
       emitter.addEventListener ||
@@ -35,13 +37,21 @@ function eventToPromise (emitter, event, opts) {
     var removeListener =
       emitter.removeEventListener ||
       emitter.removeListener
-    removeListener = removeListener ?
-      bind(removeListener, emitter) :
-      noop
+
+    var cleanUp, errorListener
+    if (removeListener) {
+      removeListener = bind(removeListener, emitter)
+
+      cleanUp = function cleanUp () {
+        removeListener(event, eventListener)
+        errorListener && removeListener('error', errorListener)
+      }
+    } else {
+      cleanUp = noop
+    }
 
     function eventListener () {
-      removeListener(event, eventListener)
-      removeListener('error', errorListener)
+      cleanUp()
 
       if (arguments.length < 2) {
         resolve(arguments[0])
@@ -49,15 +59,15 @@ function eventToPromise (emitter, event, opts) {
         resolve(toArray(arguments))
       }
     }
-    function errorListener (error) {
-      removeListener(event, eventListener)
-      removeListener('error', errorListener)
-
-      reject(error)
-    }
-
     emitter.on(event, eventListener)
-    emitter.on('error', errorListener)
+
+    if (!ignoreErrors) {
+      errorListener = function errorListener (error) {
+        cleanUp()
+        reject(error)
+      }
+      emitter.on('error', errorListener)
+    }
   }).bind(emitter)
 }
 exports = module.exports = eventToPromise

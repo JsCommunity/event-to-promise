@@ -20,7 +20,7 @@ var EventEmitter = require('events').EventEmitter
 // - Forcing the parameters to be forwarded in an array for
 //   consistency and predictability.
 // - Maybe handling multiple events.
-// - Add the ability to ignore error event.
+// - Tests the different way to add/remove an event listener.
 
 describe('event-to-promise', function () {
   var emitter
@@ -95,6 +95,21 @@ describe('event-to-promise', function () {
         expect(err).to.equal(error)
       }
     )
+  })
+
+  it('can ignore error events', function () {
+    var error = new Error()
+
+    // Node requires at least one error listener.
+    emitter.on('error', function noop () {})
+
+    var promise = eventToPromise(emitter, 'foo', {
+      ignoreErrors: true
+    })
+    emitter.emit('error', error)
+    emitter.emit('foo')
+
+    return promise
   })
 
   // -----------------------------------------------------------------
