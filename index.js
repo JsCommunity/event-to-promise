@@ -1,56 +1,52 @@
-'use strict';
+'use strict'
 
-//====================================================================
+// ===================================================================
 
-var Bluebird = require('bluebird');
+var Bluebird = require('bluebird')
 
-//====================================================================
+// ===================================================================
 
 // Faster `Function.bind()`.
-function bind(fn, ctx) {
-  return function bindedFunction() {
-    return fn.apply(ctx, arguments);
-  };
+function bind (fn, ctx) {
+  return function bindedFunction () {
+    return fn.apply(ctx, arguments)
+  }
 }
 
-function noop() {}
+function noop () {}
 
 var toArray = Array.from || (function (slice) {
-  return bind(slice.call, slice);
-})(Array.prototype.slice);
+  return bind(slice.call, slice)
+})(Array.prototype.slice)
 
-//====================================================================
+// ===================================================================
 
-function eventToPromise(emitter, event) {
+function eventToPromise (emitter, event) {
   return new Bluebird(function (resolve, reject) {
     // Some emitter do not implement removeListener.
     var removeListener = emitter.removeListener ?
       bind(emitter.removeListener, emitter) :
       noop
-    ;
 
-    function eventListener() {
-      removeListener(event, eventListener);
-      removeListener('error', errorListener);
+    function eventListener () {
+      removeListener(event, eventListener)
+      removeListener('error', errorListener)
 
-      if (arguments.length < 2)
-      {
-        resolve(arguments[0]);
-      }
-      else
-      {
-        resolve(toArray(arguments));
+      if (arguments.length < 2) {
+        resolve(arguments[0])
+      } else {
+        resolve(toArray(arguments))
       }
     }
-    function errorListener(error) {
-      removeListener(event, eventListener);
-      removeListener('error', errorListener);
+    function errorListener (error) {
+      removeListener(event, eventListener)
+      removeListener('error', errorListener)
 
-      reject(error);
+      reject(error)
     }
 
-    emitter.on(event, eventListener);
-    emitter.on('error', errorListener);
-  }).bind(emitter);
+    emitter.on(event, eventListener)
+    emitter.on('error', errorListener)
+  }).bind(emitter)
 }
-exports = module.exports = eventToPromise;
+exports = module.exports = eventToPromise
