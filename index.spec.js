@@ -17,8 +17,6 @@ var EventEmitter = require('events').EventEmitter
 // ===================================================================
 
 // TODO:
-// - Forcing the parameters to be forwarded in an array for
-//   consistency and predictability.
 // - Maybe handling multiple events.
 // - Tests the different way to add/remove an event listener.
 
@@ -81,6 +79,57 @@ describe('event-to-promise', function () {
 
   // -----------------------------------------------------------------
 
+  describe('array option', function () {
+    it('array: false: fowards the first parameter', function () {
+      var param0 = {}
+      var param1 = {}
+
+      var promise = eventToPromise(emitter, 'foo', { array: false })
+      emitter.emit('foo', param0, param1)
+
+      return promise.then(function () {
+        expect(arguments).to.have.length(1)
+        expect(arguments[0]).to.equal(param0)
+      })
+    })
+
+    it('array: true: fowards all parameters as an array', function () {
+      var param0 = {}
+      var param1 = {}
+
+      var promise = eventToPromise(emitter, 'foo', { array: true })
+      emitter.emit('foo', param0, param1)
+
+      return promise.then(function (values) {
+        expect(values).to.have.length(2)
+        expect(values[0]).to.equal(param0)
+        expect(values[1]).to.equal(param1)
+      })
+    })
+  })
+
+  // -----------------------------------------------------------------
+
+  describe('error option', function () {
+    it('handles a custom error event', function () {
+      var error = new Error()
+
+      var promise = eventToPromise(emitter, 'foo', { error: 'test-error' })
+      emitter.emit('test-error', error)
+
+      return promise.then(
+        function () {
+          expect('should not be executed').to.be.true
+        },
+        function (err) {
+          expect(err).to.equal(error)
+        }
+      )
+    })
+  })
+
+  // -----------------------------------------------------------------
+
   it('handles error event', function () {
     var error = new Error()
 
@@ -101,7 +150,7 @@ describe('event-to-promise', function () {
     var error = new Error()
 
     // Node requires at least one error listener.
-    emitter.on('error', function noop () {})
+    emitter.once('error', function noop () {})
 
     var promise = eventToPromise(emitter, 'foo', {
       ignoreErrors: true

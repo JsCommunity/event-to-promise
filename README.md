@@ -72,6 +72,26 @@ The name of the event you want to watch.
 
 #### options
 
+##### array
+
+Type: `boolean`
+Default: `undefined`
+
+This option controls how a listener's parameters are resolved by
+its promise.
+
+If true, the parameters are resolved as an array. If false,
+the first parameter is resolved. If undefined (the default),
+an array is resolved if there's more than one parameter;
+otherwise, the first parameter is resolved.
+
+##### error
+
+Type: `string`
+Default: `"error"`
+
+The name of the event which rejects the promise.
+
 ##### ignoreErrors
 
 Type: `boolean`

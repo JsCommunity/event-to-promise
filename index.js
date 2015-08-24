@@ -8,7 +8,7 @@ var Bluebird = require('bluebird')
 
 // Faster `Function.bind()`.
 function bind (fn, ctx) {
-  return function bindedFunction () {
+  return function boundFunction () {
     return fn.apply(ctx, arguments)
   }
 }
@@ -21,8 +21,10 @@ var toArray = Array.from || (function (slice) {
 
 // ===================================================================
 
-function eventToPromise (emitter, event, opts) {
-  var ignoreErrors = opts && opts.ignoreErrors
+function eventToPromise (emitter, event, _opts) {
+  var opts = _opts || {}
+  var ignoreErrors = opts.ignoreErrors
+  var errorEvent = opts.error || 'error'
 
   return new Bluebird(function (resolve, reject) {
     var addListener =
@@ -44,7 +46,7 @@ function eventToPromise (emitter, event, opts) {
 
       cleanUp = function cleanUp () {
         removeListener(event, eventListener)
-        errorListener && removeListener('error', errorListener)
+        errorListener && removeListener(errorEvent, errorListener)
       }
     } else {
       cleanUp = noop
@@ -53,20 +55,28 @@ function eventToPromise (emitter, event, opts) {
     function eventListener () {
       cleanUp()
 
-      if (arguments.length < 2) {
-        resolve(arguments[0])
-      } else {
-        resolve(toArray(arguments))
+      if ('array' in opts) {
+        if (opts.array) {
+          resolve(toArray(arguments))
+        } else {
+          resolve(arguments[0])
+        }
+      } else { // legacy behaviour for backwards compatibility
+        if (arguments.length < 2) {
+          resolve(arguments[0])
+        } else {
+          resolve(toArray(arguments))
+        }
       }
     }
-    emitter.on(event, eventListener)
+    addListener(event, eventListener)
 
     if (!ignoreErrors) {
       errorListener = function errorListener (error) {
         cleanUp()
         reject(error)
       }
-      emitter.on('error', errorListener)
+      addListener(errorEvent, errorListener)
     }
   }).bind(emitter)
 }
