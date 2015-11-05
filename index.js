@@ -2,7 +2,7 @@
 
 // ===================================================================
 
-var Bluebird = require('bluebird')
+var AnyPromise = require('any-promise')
 
 // ===================================================================
 
@@ -26,7 +26,7 @@ function eventToPromise (emitter, event, _opts) {
   var ignoreErrors = opts.ignoreErrors
   var errorEvent = opts.error || 'error'
 
-  return new Bluebird(function (resolve, reject) {
+  return new AnyPromise(function (resolve, reject) {
     var addListener =
       emitter.addEventListener ||
       emitter.addListener ||
