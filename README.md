@@ -20,36 +20,52 @@ npm install --save event-to-promise
 ## Example
 
 ```javascript
-var eventToPromise = require('event-to-promise');
+var eventToPromise = require('event-to-promise')
 
-function createServer(port) {
-  var server = require('http').createServer();
-  server.listen(port);
+function createServer (port) {
+  var server = require('http').createServer()
+  server.listen(port)
 
   // The server will be returned once it has started listening.
   //
   // If an error happened, it will be forwarded instead.
   return eventToPromise(server, 'listening').then(function () {
-    return server;
-  });
-};
+    return server
+  })
+}
 
 // Using plain promise.
 createServer(80).then(function (server) {
-  console.log('Server listening on http://localhost:80/');
+  console.log('Server listening on http://localhost:80/')
 }).catch(function (error) {
-  console.error('Server could not start:', error);
-});
+  console.error('Server could not start:', error)
+})
+```
 
-// Even better using generators!
-require('bluebird').coroutine(function *() {
+Event better using [ES2016 asynchronous functions](https://github.com/tc39/ecmascript-asyncawait):
+
+```js
+import eventToPromise from 'event-to-promise'
+
+async function createServer (port) {
+  var server = require('http').createServer()
+  server.listen(port)
+
+  await eventToPromise(server, 'listening')
+
+  return server
+}
+
+async function main () {
   try {
-    var server = yield createServer(80);
+    const server = await createServer(80);
     console.log('Server listening on http://localhost:80/');
   } catch (error) {
     console.error('Server could not start:', error);
   }
-})();
+}
+
+main()
 ```
 
 ## API
