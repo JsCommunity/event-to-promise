@@ -184,26 +184,4 @@ describe('event-to-promise', function () {
       expect(emitter.listeners('error')).to.be.empty
     })
   })
-
-  // -----------------------------------------------------------------
-
-  it('forwards the event context', function () {
-    var promise = eventToPromise(emitter, 'foo')
-    emitter.emit('foo')
-
-    return promise.then(function () {
-      expect(this).to.equal(emitter)
-    })
-  })
-
-  // -----------------------------------------------------------------
-
-  it('forwards the error context', function () {
-    var promise = eventToPromise(emitter, 'foo')
-    emitter.emit('error')
-
-    return promise.catch(function () {
-      expect(this).to.equal(emitter)
-    })
-  })
 })

@@ -78,6 +78,6 @@ function eventToPromise (emitter, event, _opts) {
       }
       addListener(errorEvent, errorListener)
     }
-  }).bind(emitter)
+  })
 }
 exports = module.exports = eventToPromise
