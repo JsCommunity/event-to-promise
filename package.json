@@ -22,8 +22,8 @@
     "any-promise": "^0.1.0"
   },
   "devDependencies": {
-    "chai": "^2.3.0",
     "mocha": "^2.2.5",
+    "must": "^0.13.1",
     "native-promise-only": "^0.8.1"
   },
   "scripts": {

@@ -6,78 +6,81 @@ var AnyPromise = require('any-promise')
 
 // ===================================================================
 
-// Faster `Function.bind()`.
-function bind (fn, ctx) {
-  return function boundFunction () {
-    return fn.apply(ctx, arguments)
+function makeEventAdder (emitter, arrayArg) {
+  var addListener =
+    emitter.addEventListener ||
+    emitter.addListener ||
+    emitter.on
+
+  if (!addListener) {
+    throw new Error('cannot register an event listener')
+  }
+
+  var removeListener =
+    emitter.removeEventListener ||
+    emitter.removeListener ||
+    emitter.off
+
+  var eventsAndListeners = []
+
+  var cleanUp = removeListener && function () {
+    for (var i = 0, n = eventsAndListeners.length; i < n; i += 2) {
+      removeListener.call(emitter, eventsAndListeners[i], eventsAndListeners[i + 1])
+    }
+  }
+
+  return function (event, cb) {
+    function listener () {
+      cleanUp && cleanUp()
+
+      var arg
+      var n = arguments.length
+      if (arrayArg) {
+        arg = new Array(n)
+        for (var i = 0; i < n; ++i) {
+          arg[i] = arguments[i]
+        }
+      } else {
+        arg = n > 0 ? arguments[0] : undefined
+      }
+
+      cb(arg)
+    }
+
+    eventsAndListeners.push(event, listener)
+    addListener.call(emitter, event, listener)
   }
 }
 
-function noop () {}
-
-var toArray = Array.from || (function (slice) {
-  return bind(slice.call, slice)
-})(Array.prototype.slice)
-
 // ===================================================================
 
-function eventToPromise (emitter, event, _opts) {
-  var opts = _opts || {}
-  var ignoreErrors = opts.ignoreErrors
-  var errorEvent = opts.error || 'error'
-
+function eventToPromise (emitter, event, opts) {
   return new AnyPromise(function (resolve, reject) {
-    var addListener =
-      emitter.addEventListener ||
-      emitter.addListener ||
-      emitter.on
-    if (!addListener) {
-      throw new Error('cannot register an event listener')
-    }
-    addListener = bind(addListener, emitter)
+    var addEvent = makeEventAdder(emitter, opts && opts.array)
 
-    var removeListener =
-      emitter.removeEventListener ||
-      emitter.removeListener
+    addEvent(event, resolve)
 
-    var cleanUp, errorListener
-    if (removeListener) {
-      removeListener = bind(removeListener, emitter)
-
-      cleanUp = function cleanUp () {
-        removeListener(event, eventListener)
-        errorListener && removeListener(errorEvent, errorListener)
-      }
-    } else {
-      cleanUp = noop
-    }
-
-    function eventListener () {
-      cleanUp()
-
-      if ('array' in opts) {
-        if (opts.array) {
-          resolve(toArray(arguments))
-        } else {
-          resolve(arguments[0])
-        }
-      } else { // legacy behaviour for backwards compatibility
-        if (arguments.length < 2) {
-          resolve(arguments[0])
-        } else {
-          resolve(toArray(arguments))
-        }
-      }
-    }
-    addListener(event, eventListener)
-
-    if (!ignoreErrors) {
-      errorListener = function errorListener (error) {
-        cleanUp()
-        reject(error)
-      }
-      addListener(errorEvent, errorListener)
+    if (!opts || !opts.ignoreErrors) {
+      addEvent(opts && opts.error || 'error', reject)
     }
   })
 }
-exports = module.exports = eventToPromise
+
+var defaultErrorEvents = [ 'error' ]
+eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEvents, opts) {
+  errorEvents || (errorEvents = defaultErrorEvents)
+
+  return new AnyPromise(function (resolve, reject) {
+    var addEvent = makeEventAdder(emitter, opts && opts.array)
+
+    var i, n
+    for (i = 0, n = successEvents.length; i < n; ++i) {
+      addEvent(successEvents[i], resolve)
+    }
+    for (i = 0, n = errorEvents.length; i < n; ++i) {
+      addEvent(errorEvents[i], reject)
+    }
+  })
+}
+
+module.exports = eventToPromise

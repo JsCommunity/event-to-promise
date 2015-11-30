@@ -70,16 +70,19 @@ main()
 
 ## API
 
-### eventToPromise(emitter, eventName, [options])
+### eventToPromise(emitter, event, [options])
+
+> Wait for one event. The first parameter of the emitted event is used
+> to resolve/reject the promise.
 
 #### emitter
 
 *Required*
-Type: `object`
+Type: `Object`
 
 The event emitter you want to watch an event on.
 
-#### eventName
+#### event
 
 *Required*
 Type: `string`
@@ -91,15 +94,9 @@ The name of the event you want to watch.
 ##### array
 
 Type: `boolean`
-Default: `undefined`
+Default: `false`
 
-This option controls how a listener's parameters are resolved by
-its promise.
-
-If true, the parameters are resolved as an array. If false,
-the first parameter is resolved. If undefined (the default),
-an array is resolved if there's more than one parameter;
-otherwise, the first parameter is resolved.
+If true, all parameters of the emitted events are put in an array which is used to resolve/reject the promise.
 
 ##### error
 
@@ -114,6 +111,41 @@ Type: `boolean`
 Default: `false`
 
 Whether the error event should be ignored and not reject the promise.
+
+### eventToPromise.multi(emitter, successEvents, errorEvents, options)
+
+> Wait for one of multiple events. The first parameter of the emitted
+> event is used to resolve/reject the promise.
+
+#### emitter
+
+*Required*
+Type: `Object`
+
+The event emitter you want to watch an event on.
+
+#### successEvents
+
+*Required*
+Type: `Array<string>`
+
+The names of the events which resolve the promise.
+
+#### errorEvents
+
+Type: `Array<string>`
+Default: `[ 'error' ]`
+
+The names of the events which reject the promise.
+
+#### options
+
+##### array
+
+Type: `boolean`
+Default: `false`
+
+If true, all parameters of the emitted events are put in an array which is used to resolve/reject the promise.
 
 ## Contributing
 
