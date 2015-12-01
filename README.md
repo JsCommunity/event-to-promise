@@ -112,10 +112,13 @@ Default: `false`
 
 Whether the error event should be ignored and not reject the promise.
 
-### eventToPromise.multi(emitter, successEvents, errorEvents, options)
+### eventToPromise.multi(emitter, successEvents, errorEvents)
 
-> Wait for one of multiple events. The first parameter of the emitted
-> event is used to resolve/reject the promise.
+> Wait for one of multiple events. The array of all the parameters of
+> the emitted event is used to resolve/reject the promise.
+>
+> The array also has an `event` property indicating which event has
+> been emitted.
 
 #### emitter
 
@@ -138,14 +141,6 @@ Default: `[ 'error' ]`
 
 The names of the events which reject the promise.
 
-#### options
-
-##### array
-
-Type: `boolean`
-Default: `false`
-
-If true, all parameters of the emitted events are put in an array which is used to resolve/reject the promise.
 
 ## Contributing
 

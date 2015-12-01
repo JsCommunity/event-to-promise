@@ -4,6 +4,7 @@
 
 // ===================================================================
 
+var AnyPromise = require('any-promise')
 var EventEmitter = require('events').EventEmitter
 var expect = require('must')
 
@@ -143,9 +144,13 @@ describe('eventToPromise()', function () {
 describe('eventToPromise.multi()', function () {
   it('resolves if one of the success events is emitted', function () {
     var promise = eventToPromise.multi(emitter, [ 'foo', 'bar' ])
-    emitter.emit('foo', param1)
+    emitter.emit('foo', param1, param2)
 
-    return expect(promise).to.resolve.to.eql(param1)
+
+    return AnyPromise.all([
+      expect(promise).to.resolve.to.eql([ param1, param2 ]),
+      expect(promise).to.resolve.to.have.property('event', 'foo')
+    ])
   })
 
   // -----------------------------------------------------------------
@@ -154,19 +159,9 @@ describe('eventToPromise.multi()', function () {
     var promise = eventToPromise.multi(emitter, [], [ 'foo', 'bar' ])
     emitter.emit('bar', param1)
 
-    return expect(promise).to.reject.to.eql(param1)
-  })
-
-  // -----------------------------------------------------------------
-
-  describe('array option', function () {
-    it('forwards all parameters as an array', function () {
-      var promise = eventToPromise.multi(emitter, [ 'foo' ], [], {
-        array: true
-      })
-      emitter.emit('foo', param1, param2)
-
-      return expect(promise).to.resolve.to.eql([ param1, param2 ])
-    })
+    return AnyPromise.all([
+      expect(promise).to.reject.to.eql([ param1 ]),
+      expect(promise).to.reject.to.have.property('event', 'bar')
+    ])
   })
 })

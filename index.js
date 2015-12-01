@@ -40,6 +40,7 @@ function makeEventAdder (emitter, arrayArg) {
         for (var i = 0; i < n; ++i) {
           arg[i] = arguments[i]
         }
+        arg.event = event
       } else {
         arg = n > 0 ? arguments[0] : undefined
       }
@@ -71,7 +72,7 @@ eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEv
   errorEvents || (errorEvents = defaultErrorEvents)
 
   return new AnyPromise(function (resolve, reject) {
-    var addEvent = makeEventAdder(emitter, opts && opts.array)
+    var addEvent = makeEventAdder(emitter, true)
 
     var i, n
     for (i = 0, n = successEvents.length; i < n; ++i) {
