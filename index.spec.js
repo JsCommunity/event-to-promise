@@ -146,7 +146,6 @@ describe('eventToPromise.multi()', function () {
     var promise = eventToPromise.multi(emitter, [ 'foo', 'bar' ])
     emitter.emit('foo', param1, param2)
 
-
     return AnyPromise.all([
       expect(promise).to.resolve.to.eql([ param1, param2 ]),
       expect(promise).to.resolve.to.have.property('event', 'foo')

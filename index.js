@@ -68,7 +68,7 @@ function eventToPromise (emitter, event, opts) {
 }
 
 var defaultErrorEvents = [ 'error' ]
-eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEvents, opts) {
+eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEvents) {
   errorEvents || (errorEvents = defaultErrorEvents)
 
   return new AnyPromise(function (resolve, reject) {
