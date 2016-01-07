@@ -29,22 +29,11 @@ var param2 = 'param2'
 
 describe('eventToPromise()', function () {
   it('waits for an event', function () {
-    var emitted = false
-
     var promise = eventToPromise(emitter, 'foo')
 
-    // Delay the event emission of two ticks to make sure the promise
-    // has a chance to run before the event.
-    process.nextTick(function () {
-      process.nextTick(function () {
-        emitter.emit('foo')
-        emitted = true
-      })
-    })
+    emitter.emit('foo')
 
-    return promise.then(function () {
-      expect(emitted).to.be.true()
-    })
+    return promise
   })
 
   // -----------------------------------------------------------------
