@@ -6,6 +6,8 @@ var AnyPromise = require('any-promise')
 
 // ===================================================================
 
+function noop () {}
+
 function makeEventAdder (emitter, arrayArg) {
   var addListener =
     emitter.addEventListener ||
@@ -23,15 +25,17 @@ function makeEventAdder (emitter, arrayArg) {
 
   var eventsAndListeners = []
 
-  var cleanUp = removeListener && function () {
-    for (var i = 0, n = eventsAndListeners.length; i < n; i += 2) {
-      removeListener.call(emitter, eventsAndListeners[i], eventsAndListeners[i + 1])
+  var cleanUp = removeListener
+    ? function () {
+      for (var i = 0, n = eventsAndListeners.length; i < n; i += 2) {
+        removeListener.call(emitter, eventsAndListeners[i], eventsAndListeners[i + 1])
+      }
     }
-  }
+    : noop
 
-  return function (event, cb) {
+  function addEvent (event, cb) {
     function listener () {
-      cleanUp && cleanUp()
+      cleanUp()
 
       var arg
       var n = arguments.length
@@ -51,13 +55,21 @@ function makeEventAdder (emitter, arrayArg) {
     eventsAndListeners.push(event, listener)
     addListener.call(emitter, event, listener)
   }
+  addEvent.cleanUp = cleanUp
+
+  return addEvent
 }
 
 // ===================================================================
 
 function eventToPromise (emitter, event, opts) {
-  return new AnyPromise(function (resolve, reject) {
+  var cancel
+  var promise = new AnyPromise(function (resolve, reject) {
     var addEvent = makeEventAdder(emitter, opts && opts.array)
+    cancel = function () {
+      cancel = noop
+      addEvent.cleanUp()
+    }
 
     addEvent(event, resolve)
 
@@ -65,14 +77,22 @@ function eventToPromise (emitter, event, opts) {
       addEvent(opts && opts.error || 'error', reject)
     }
   })
+  promise.cancel = function () { return cancel() }
+
+  return promise
 }
 
 var defaultErrorEvents = [ 'error' ]
 eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEvents) {
   errorEvents || (errorEvents = defaultErrorEvents)
 
-  return new AnyPromise(function (resolve, reject) {
+  var cancel
+  var promise = new AnyPromise(function (resolve, reject) {
     var addEvent = makeEventAdder(emitter, true)
+    cancel = function () {
+      cancel = noop
+      addEvent.cleanUp()
+    }
 
     var i, n
     for (i = 0, n = successEvents.length; i < n; ++i) {
@@ -82,6 +102,9 @@ eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEv
       addEvent(errorEvents[i], reject)
     }
   })
+  promise.cancel = function () { return cancel() }
+
+  return promise
 }
 
 module.exports = eventToPromise
