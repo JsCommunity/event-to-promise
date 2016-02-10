@@ -2,10 +2,6 @@
 
 // ===================================================================
 
-var AnyPromise = require('any-promise')
-
-// ===================================================================
-
 function noop () {}
 
 function makeEventAdder (emitter, arrayArg) {
@@ -64,7 +60,7 @@ function makeEventAdder (emitter, arrayArg) {
 
 function eventToPromise (emitter, event, opts) {
   var cancel
-  var promise = new AnyPromise(function (resolve, reject) {
+  var promise = new Promise(function (resolve, reject) {
     var addEvent = makeEventAdder(emitter, opts && opts.array)
     cancel = function () {
       cancel = noop
@@ -87,7 +83,7 @@ eventToPromise.multi = function eventsToPromise (emitter, successEvents, errorEv
   errorEvents || (errorEvents = defaultErrorEvents)
 
   var cancel
-  var promise = new AnyPromise(function (resolve, reject) {
+  var promise = new Promise(function (resolve, reject) {
     var addEvent = makeEventAdder(emitter, true)
     cancel = function () {
       cancel = noop

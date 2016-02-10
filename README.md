@@ -17,6 +17,10 @@ Download [manually](https://github.com/julien-f/event-to-promise/releases) or wi
 npm install --save event-to-promise
 ```
 
+This library requires promises support, for Node versions prior to 0.12 [see
+this page](https://github.com/julien-f/js-promise-toolbox#usage) to
+enable them.
+
 ## Example
 
 ```javascript
