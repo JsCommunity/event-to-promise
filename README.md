@@ -74,10 +74,19 @@ main()
 
 ## API
 
-### eventToPromise(emitter, event, [options])
+### eventToPromise(emitter, event, [options]) => Promise
 
 > Wait for one event. The first parameter of the emitted event is used
 > to resolve/reject the promise.
+
+The returned promise has a `cancel()` method which can be used to
+remove the event listeners. Note that the promise will never settled
+if canceled.
+
+```js
+const promise = eventToPromise(emitter, 'foo')
+promise.cancel()
+```
 
 #### emitter
 
@@ -116,13 +125,22 @@ Default: `false`
 
 Whether the error event should be ignored and not reject the promise.
 
-### eventToPromise.multi(emitter, successEvents, errorEvents)
+### eventToPromise.multi(emitter, successEvents, errorEvents) => Promise
 
 > Wait for one of multiple events. The array of all the parameters of
 > the emitted event is used to resolve/reject the promise.
 >
 > The array also has an `event` property indicating which event has
 > been emitted.
+
+The returned promise has a `cancel()` method which can be used to
+remove the event listeners. Note that the promise will never settled
+if canceled.
+
+```js
+const promise = eventToPromise(emitter, 'foo')
+promise.cancel()
+```
 
 #### emitter
 
