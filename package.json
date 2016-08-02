@@ -19,7 +19,7 @@
     "url": "https://github.com/julien-f/event-to-promise"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
+    "mocha": "^3.0.0",
     "must": "^0.13.1",
     "native-promise-only": "^0.8.1",
     "standard": "^7.0.0"
