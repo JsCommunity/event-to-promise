@@ -22,7 +22,7 @@
     "mocha": "^3.0.0",
     "must": "^0.13.1",
     "native-promise-only": "^0.8.1",
-    "standard": "^8.0.0"
+    "standard": "^9.0.0"
   },
   "scripts": {
     "lint": "standard",
