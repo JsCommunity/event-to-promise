@@ -70,7 +70,7 @@ function eventToPromise (emitter, event, opts) {
     addEvent(event, resolve)
 
     if (!opts || !opts.ignoreErrors) {
-      addEvent(opts && opts.error || 'error', reject)
+      addEvent((opts && opts.error) || 'error', reject)
     }
   })
   promise.cancel = function () { return cancel() }
