@@ -19,11 +19,13 @@
     "url": "https://github.com/julien-f/event-to-promise"
   },
   "devDependencies": {
+    "husky": "^0.13.1",
     "jest": "^19.0.2",
     "native-promise-only": "^0.8.1",
     "standard": "^9.0.0"
   },
   "scripts": {
+    "commitmsg": "yarn test",
     "dev-test": "jest --watch",
     "lint": "standard",
     "posttest": "npm run lint",
