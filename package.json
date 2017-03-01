@@ -19,15 +19,15 @@
     "url": "https://github.com/julien-f/event-to-promise"
   },
   "devDependencies": {
-    "mocha": "^3.0.0",
-    "must": "^0.13.1",
+    "jest": "^19.0.2",
     "native-promise-only": "^0.8.1",
     "standard": "^9.0.0"
   },
   "scripts": {
+    "dev-test": "jest --watch",
     "lint": "standard",
     "posttest": "npm run lint",
-    "test": "mocha index.spec.js"
+    "test": "jest"
   },
   "files": [
     "index.js"

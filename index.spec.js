@@ -1,15 +1,22 @@
 'use strict'
 
-/* eslint-env mocha */
+/* eslint-env jest */
 
 // ===================================================================
 
 require('native-promise-only')
 
 var EventEmitter = require('events').EventEmitter
-var expect = require('must')
 
 var eventToPromise = require('./')
+
+function rejectionOf (promise) {
+  return promise.then(function (value) {
+    throw value
+  }, function (reason) {
+    return reason
+  })
+}
 
 // ===================================================================
 
@@ -43,7 +50,9 @@ describe('eventToPromise()', function () {
     var promise = eventToPromise(emitter, 'foo')
     emitter.emit('foo', param1, param2)
 
-    return expect(promise).to.resolve.to.equal(param1)
+    return promise.then(function (value) {
+      expect(value).toBe(param1)
+    })
   })
 
   // -----------------------------------------------------------------
@@ -55,7 +64,10 @@ describe('eventToPromise()', function () {
       })
       emitter.emit('foo', param1, param2)
 
-      return expect(promise).to.resolve.to.eql([ param1, param2 ])
+      return promise.then(function (value) {
+        expect(value.event).toBe('foo')
+        expect(value.slice()).toEqual([ param1, param2 ])
+      })
     })
   })
 
@@ -67,7 +79,9 @@ describe('eventToPromise()', function () {
     var promise = eventToPromise(emitter, 'foo')
     emitter.emit('error', error)
 
-    return expect(promise).to.reject.to.equal(error)
+    return rejectionOf(promise).then(function (value) {
+      expect(value).toBe(error)
+    })
   })
 
   // -----------------------------------------------------------------
@@ -81,7 +95,9 @@ describe('eventToPromise()', function () {
       })
       emitter.emit('test-error', error)
 
-      return expect(promise).to.reject.to.equal(error)
+      return rejectionOf(promise).then(function (value) {
+        expect(value).toBe(error)
+      })
     })
   })
 
@@ -100,7 +116,9 @@ describe('eventToPromise()', function () {
       emitter.emit('error', error)
       emitter.emit('foo', param1)
 
-      return expect(promise).to.resolve.to.equal(param1)
+      return promise.then(function (value) {
+        expect(value).toBe(param1)
+      })
     })
   })
 
@@ -111,8 +129,8 @@ describe('eventToPromise()', function () {
     emitter.emit('foo')
 
     return promise.then(function () {
-      expect(emitter.listeners('foo')).to.be.empty()
-      expect(emitter.listeners('error')).to.be.empty()
+      expect(emitter.listeners('foo')).toEqual([])
+      expect(emitter.listeners('error')).toEqual([])
     })
   })
 
@@ -123,8 +141,8 @@ describe('eventToPromise()', function () {
     emitter.emit('error')
 
     return promise.catch(function () {
-      expect(emitter.listeners('foo')).to.be.empty()
-      expect(emitter.listeners('error')).to.be.empty()
+      expect(emitter.listeners('foo')).toEqual([])
+      expect(emitter.listeners('error')).toEqual([])
     })
   })
 })
@@ -136,10 +154,10 @@ describe('eventToPromise.multi()', function () {
     var promise = eventToPromise.multi(emitter, [ 'foo', 'bar' ])
     emitter.emit('foo', param1, param2)
 
-    return Promise.all([
-      expect(promise).to.resolve.to.eql([ param1, param2 ]),
-      expect(promise).to.resolve.to.have.property('event', 'foo')
-    ])
+    return promise.then(function (value) {
+      expect(value.event).toBe('foo')
+      expect(value.slice()).toEqual([ param1, param2 ])
+    })
   })
 
   // -----------------------------------------------------------------
@@ -148,9 +166,9 @@ describe('eventToPromise.multi()', function () {
     var promise = eventToPromise.multi(emitter, [], [ 'foo', 'bar' ])
     emitter.emit('bar', param1)
 
-    return Promise.all([
-      expect(promise).to.reject.to.eql([ param1 ]),
-      expect(promise).to.reject.to.have.property('event', 'bar')
-    ])
+    return rejectionOf(promise).then(function (value) {
+      expect(value.event).toBe('bar')
+      expect(value.slice()).toEqual([ param1 ])
+    })
   })
 })
