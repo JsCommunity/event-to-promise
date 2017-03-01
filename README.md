@@ -33,8 +33,6 @@ You can directly use the build provided at [unpkg.com](https://unpkg.com):
 ## Example
 
 ```javascript
-var eventToPromise = require('event-to-promise')
-
 function createServer (port) {
   var server = require('http').createServer()
   server.listen(port)
@@ -58,8 +56,6 @@ createServer(80).then(function (server) {
 Event better using [ES2016 asynchronous functions](https://github.com/tc39/ecmascript-asyncawait):
 
 ```js
-import eventToPromise from 'event-to-promise'
-
 async function createServer (port) {
   var server = require('http').createServer()
   server.listen(port)
