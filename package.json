@@ -7,8 +7,8 @@
     "event",
     "promise"
   ],
-  "homepage": "https://github.com/julien-f/event-to-promise",
-  "bugs": "https://github.com/julien-f/event-to-promise/issues",
+  "homepage": "https://github.com/JsCommunity/event-to-promise",
+  "bugs": "https://github.com/JsCommunity/event-to-promise/issues",
   "author": {
     "name": "Julien Fontanet",
     "email": "julien.fontanet@isonoe.net",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/julien-f/event-to-promise"
+    "url": "https://github.com/JsCommunity/event-to-promise"
   },
   "devDependencies": {
     "browserify": "^14.1.0",

@@ -1,8 +1,8 @@
 # event-to-promise
 
-[![Build Status](https://img.shields.io/travis/julien-f/event-to-promise/master.svg)](http://travis-ci.org/julien-f/event-to-promise)
-[![Dependency Status](https://david-dm.org/julien-f/event-to-promise/status.svg?theme=shields.io)](https://david-dm.org/julien-f/event-to-promise)
-[![devDependency Status](https://david-dm.org/julien-f/event-to-promise/dev-status.svg?theme=shields.io)](https://david-dm.org/julien-f/event-to-promise#info=devDependencies)
+[![Build Status](https://img.shields.io/travis/JsCommunity/event-to-promise/master.svg)](http://travis-ci.org/JsCommunity/event-to-promise)
+[![Dependency Status](https://david-dm.org/JsCommunity/event-to-promise/status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/event-to-promise)
+[![devDependency Status](https://david-dm.org/JsCommunity/event-to-promise/dev-status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/event-to-promise#info=devDependencies)
 
 > Create a promise waiting for an event
 
@@ -84,7 +84,7 @@ main()
 ## API
 
 This library requires promises support, for Node versions prior to 0.12 [see
-this page](https://github.com/julien-f/js-promise-toolbox#usage) to
+this page](https://github.com/JsCommunity/js-promise-toolbox#usage) to
 enable them.
 
 ### eventToPromise(emitter, event, [options]) => Promise
@@ -184,7 +184,7 @@ the code.
 
 You may:
 
-- report any [issue](https://github.com/julien-f/event-to-promise/issues)
+- report any [issue](https://github.com/JsCommunity/event-to-promise/issues)
   you've encountered;
 - fork and create a pull request.
 
