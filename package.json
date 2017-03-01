@@ -19,19 +19,23 @@
     "url": "https://github.com/julien-f/event-to-promise"
   },
   "devDependencies": {
+    "browserify": "^14.1.0",
     "husky": "^0.13.1",
     "jest": "^19.0.2",
     "native-promise-only": "^0.8.1",
-    "standard": "^9.0.0"
+    "standard": "^9.0.0",
+    "uglify-js": "^2.8.3"
   },
   "scripts": {
     "commitmsg": "yarn test",
     "dev-test": "jest --watch",
     "lint": "standard",
+    "prepublish": "mkdir -p dist && browserify -s eventToPromise index.js | uglifyjs -c > dist/event-to-promise.js",
     "posttest": "npm run lint",
     "test": "jest"
   },
   "files": [
+    "dist/",
     "index.js"
   ]
 }

@@ -6,20 +6,29 @@
 
 > Create a promise waiting for an event
 
+## Installation
 
-## Install
+### Node & [Browserify](http://browserify.org/)/[Webpack](https://webpack.js.org/)
 
-Download [manually](https://github.com/julien-f/event-to-promise/releases) or with package-manager.
-
-#### [npm](https://npmjs.org/package/event-to-promise)
+Installation of the [npm package](https://npmjs.org/package/event-to-promise):
 
 ```
-npm install --save event-to-promise
+> npm install --save event-to-promise
 ```
 
-This library requires promises support, for Node versions prior to 0.12 [see
-this page](https://github.com/julien-f/js-promise-toolbox#usage) to
-enable them.
+Then require the package:
+
+```javascript
+var eventToPromise = require('event-to-promise');
+```
+
+### Browser
+
+You can directly use the build provided at [unpkg.com](https://unpkg.com):
+
+```html
+<script src="https://unpkg.com/event-to-promise@0.8/dist/event-to-promise.js"></script>
+```
 
 ## Example
 
@@ -73,6 +82,10 @@ main()
 ```
 
 ## API
+
+This library requires promises support, for Node versions prior to 0.12 [see
+this page](https://github.com/julien-f/js-promise-toolbox#usage) to
+enable them.
 
 ### eventToPromise(emitter, event, [options]) => Promise
 
