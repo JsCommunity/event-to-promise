@@ -24,7 +24,7 @@ var eventToPromise = require('event-to-promise');
 
 ### Browser
 
-You can directly use the build provided at [unpkg.com](https://unpkg.com):
+You can directly use the build provided at [unpkg.com](https://unpkg.com/event-to-promise/):
 
 ```html
 <script src="https://unpkg.com/event-to-promise@0.8/dist/event-to-promise.js"></script>
