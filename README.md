@@ -80,7 +80,7 @@ main()
 ## API
 
 This library requires promises support, for Node versions prior to 0.12 [see
-this page](https://github.com/JsCommunity/js-promise-toolbox#usage) to
+this page](https://github.com/JsCommunity/promise-toolbox#usage) to
 enable them.
 
 ### eventToPromise(emitter, event, [options]) => Promise
