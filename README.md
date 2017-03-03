@@ -94,6 +94,18 @@ if canceled.
 
 ```js
 const promise = eventToPromise(emitter, 'foo')
+
+promise.then(
+  value => {
+    console.log('foo event was emitted with value', value)
+  },
+  reason => {
+    console.error('an error has been emitted', reason)
+  }
+)
+
+// the promise can be canceled: listeners are removed and the promis
+// will never settled
 promise.cancel()
 ```
 
@@ -147,8 +159,19 @@ remove the event listeners. Note that the promise will never settled
 if canceled.
 
 ```js
-const promise = eventToPromise(emitter, 'foo')
-promise.cancel()
+eventToPromise.multi(
+  emitter,
+  [ 'foo', 'bar' ],
+  [ 'error1', 'error2' ]
+).then(
+  values => {
+    console.log('event %s have been emitted with values', values.event, values)
+  },
+  reasons => {
+    console.error('error event %s has been emitted with errors', reasons.event, reasons)
+  }
+)
+
 ```
 
 #### emitter
